@@ -11,6 +11,12 @@ namespace TurretWebService.Data
     {
         public TurretDBContext():base("DBConnection")
         { }
+        
+        // Статический конструктор класса контекста БД позволяет установить инициализтор. 
+        static TurretDBContext() => Database.SetInitializer(new TurretDBInitializer());
+
+        public TurretDBContext(string ConnectionString): base(ConnectionString)
+        { }
 
         public DbSet<User> Users { get; set; }
     }
