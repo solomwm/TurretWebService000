@@ -21,19 +21,35 @@ namespace TestClient
     /// </summary>
     public partial class MainWindow : Window
     {
+        private TurretWebApiClient client;
+
         public MainWindow()
         {
             InitializeComponent();
+            client = new TurretWebApiClient("http://localhost:50463/");
         }
 
-        private void getUserButton_Click(object sender, RoutedEventArgs e)
+        private async void getUserButton_Click(object sender, RoutedEventArgs e)
         {
-
+            List<User> users = new List<User>();
+            if (userIdTextBox.Text != String.Empty)
+            {
+                User user = await client.GetUserAsync(client.BaseAddress + "api/Users/" + userIdTextBox.Text);
+                if (user != null) users.Add(user);
+                else
+                {
+                    users = (List<User>)await client.GetUsersAsync(client.BaseAddress + "api/Users");
+                    MessageBox.Show("UserId = " + userIdTextBox.Text + " not found!", this.Title, MessageBoxButton.OK, 
+                        MessageBoxImage.Error);
+                }
+                usersDataGrid.ItemsSource = users;
+            }
         }
 
-        private void getAllUsersButton_Click(object sender, RoutedEventArgs e)
+        private async void getAllUsersButton_Click(object sender, RoutedEventArgs e)
         {
-
+            IEnumerable<User> users = await client.GetUsersAsync(client.BaseAddress + "api/Users");
+            usersDataGrid.ItemsSource = users;
         }
     }
 }
