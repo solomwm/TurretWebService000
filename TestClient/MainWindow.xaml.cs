@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,11 +35,11 @@ namespace TestClient
             List<User> users = new List<User>();
             if (userIdTextBox.Text != String.Empty)
             {
-                User user = await client.GetUserAsync(client.BaseAddress + "api/Users/" + userIdTextBox.Text);
+                User user = await client.GetUserAsync(userIdTextBox.Text);
                 if (user != null) users.Add(user);
                 else
                 {
-                    users = (List<User>)await client.GetUsersAsync(client.BaseAddress + "api/Users");
+                    users = (List<User>) await client.GetUsersAsync();
                     MessageBox.Show("UserId = " + userIdTextBox.Text + " not found!", this.Title, MessageBoxButton.OK, 
                         MessageBoxImage.Error);
                 }
@@ -48,8 +49,56 @@ namespace TestClient
 
         private async void getAllUsersButton_Click(object sender, RoutedEventArgs e)
         {
-            IEnumerable<User> users = await client.GetUsersAsync(client.BaseAddress + "api/Users");
-            usersDataGrid.ItemsSource = users;
+            usersDataGrid.ItemsSource = await GetAllUsersAsync();
+        }
+
+        private async void addUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            User user = null;
+            EditUserWindow editUserWindow;
+            if (usersDataGrid.SelectedItem != null)
+            {
+                user = usersDataGrid.SelectedItem as User;
+                editUserWindow = new EditUserWindow(user);
+                if (editUserWindow.ShowDialog() ?? false)
+                {
+                    await client.EditUserAsync(user.Id, user);
+                }
+            }
+            else
+            {
+                user = new User { Id = 0, MaxLevel = 0, MaxScore = 0 };
+                editUserWindow = new EditUserWindow(user);
+                if (editUserWindow.ShowDialog() ?? false)
+                {
+                    User newUser = await client.AddUserAsync(user);
+                    //usersDataGrid.Items.Add(newUser);
+                }
+            }
+        }
+
+        private async void delUser_Click(object sender, RoutedEventArgs e)
+        {
+            if (usersDataGrid.SelectedItem != null)
+            {
+                await client.DeleteUserAsync((usersDataGrid.SelectedItem as User).Id.ToString());
+                usersDataGrid.ItemsSource = await GetAllUsersAsync();
+            }
+        }
+
+        private void usersDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (usersDataGrid.SelectedItem != null)
+            {
+                userIdTextBox.Text = (usersDataGrid.SelectedItem as User).Id.ToString();
+            }
+        }
+
+        private async Task<List<User>> GetAllUsersAsync()
+        {
+            List<User> users = new List<User>();
+            users = (List<User>) await client.GetUsersAsync();
+            return users;
         }
     }
 }

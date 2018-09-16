@@ -5,6 +5,7 @@ using System.Web;
 
 namespace TurretWebService.Models
 {
+    [Serializable]
     public class User
     {
         public int Id { get; set; }

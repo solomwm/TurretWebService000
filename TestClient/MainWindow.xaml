@@ -16,7 +16,8 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <DataGrid x:Name="usersDataGrid" Grid.ColumnSpan="2" AutoGenerateColumns="False" EnableRowVirtualization="True"
-                  ItemsSource="{Binding}" Margin="10" IsReadOnly="True" FontWeight="Bold">
+                  ItemsSource="{Binding}" Margin="10" IsReadOnly="True" FontWeight="Bold" SelectionChanged="usersDataGrid_SelectionChanged" 
+                  SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="idColumn" Binding="{Binding Id}" Header="Id" IsReadOnly="True" Width="Auto"/>
                 <DataGridTextColumn x:Name="nameColumn" Binding="{Binding Name}" Header="User Name" IsReadOnly="True" Width="Auto"/>
@@ -31,6 +32,10 @@
             <Button x:Name="getUserButton" Content="Get User(s)" Margin="10" Click="getUserButton_Click" Grid.Column="1" Grid.Row="1"
                     Width="Auto" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Button x:Name="getAllUsersButton" Content="All Users" Margin="10" Click="getAllUsersButton_Click" Grid.Column="1" Grid.Row="1"
+                    Width="Auto" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button x:Name="addUserButton" Content="Add(Edit) User" Margin="10" Click="addUserButton_Click" Grid.Column="1" Grid.Row="1"
+                    Width="Auto" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button x:Name="delUser" Content="Delete User" Margin="10" Click="delUser_Click" Grid.Column="1" Grid.Row="1"
                     Width="Auto" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
