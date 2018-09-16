@@ -89,7 +89,7 @@ namespace TestClient
             User result = null;
             HttpRequestMessage request = new HttpRequestMessage
             {
-                Content = new StringContent(JsonConvert.SerializeObject(user))
+                Content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")
             };
             try
             {
@@ -107,7 +107,7 @@ namespace TestClient
         {
             HttpRequestMessage request = new HttpRequestMessage
             {
-                Content = new StringContent(JsonConvert.SerializeObject(user))
+                Content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json")
             };
             try
             {
