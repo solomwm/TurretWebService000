@@ -72,7 +72,11 @@ namespace TestClient
                 if (editUserWindow.ShowDialog() ?? false)
                 {
                     User newUser = await client.AddUserAsync(user);
-                    //usersDataGrid.Items.Add(newUser);
+                    List<User> users = new List<User>(usersDataGrid.Items.Cast<User>())
+                    {
+                        newUser
+                    };
+                    usersDataGrid.ItemsSource = users;
                 }
             }
         }
