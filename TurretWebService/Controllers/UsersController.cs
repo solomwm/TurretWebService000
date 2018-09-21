@@ -36,6 +36,30 @@ namespace TurretWebService.Controllers
             return Ok(user);
         }
 
+        // GET: api/Users/getbyname/{name}
+        [HttpGet()]
+        [Route("api/Users/getbyname/{name?}")]
+        public IHttpActionResult GetUsersByName(string name)
+        {
+            if (name == null) return NotFound();
+            StringComparison comparison = StringComparison.OrdinalIgnoreCase;
+            var users = db.Users.ToList().FindAll((u) => u.Name.IndexOf(name, comparison) == 0);
+            if (users.Count == 0) return NotFound();
+            return Ok(users);
+        }
+
+        // GET: api/Users/getifcontain/{substring}
+        [HttpGet()]
+        [Route("api/Users/getifcontain/{substring?}")]
+        public IHttpActionResult GetIfContain(string substring)
+        {
+            if (substring == null) return NotFound();
+            StringComparison comparison = StringComparison.OrdinalIgnoreCase;
+            var users = db.Users.ToList().FindAll((u) => u.Name.IndexOf(substring, comparison) >= 0);
+            if (users.Count == 0) return NotFound();
+            return Ok(users);
+        }
+
         // PUT: api/Users/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutUser(int id, User user)
