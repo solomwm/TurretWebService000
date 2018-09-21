@@ -42,6 +42,42 @@ namespace TestClient
             return users;
         }
 
+        public async Task<IEnumerable<User>> GetUsersByName(string name)
+        {
+            IEnumerable<User> users = null;
+            try
+            {
+                HttpResponseMessage response = await GetAsync(path + "getbyname/" + name);
+                if (response.IsSuccessStatusCode)
+                {
+                    users = await response.Content.ReadAsAsync<IEnumerable<User>>();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return users;
+        }
+
+        public async Task<IEnumerable<User>> GetUsersIfContain(string substr)
+        {
+            IEnumerable<User> users = null;
+            try
+            {
+                HttpResponseMessage response = await GetAsync(path + "getifcontain/" + substr);
+                if (response.IsSuccessStatusCode)
+                {
+                    users = await response.Content.ReadAsAsync<IEnumerable<User>>();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return users;
+        }
+
         public async Task<User> GetUserAsync(string id)
         {
             User user = null;
