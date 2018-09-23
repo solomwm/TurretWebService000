@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using TurretWebService.Data;
 using TurretWebService.Models;
+using TurretWebService.Params;
 
 namespace TurretWebService.Controllers
 {
@@ -41,9 +42,7 @@ namespace TurretWebService.Controllers
         [Route("api/Users/getbyname/{name?}")]
         public IHttpActionResult GetUsersByName(string name)
         {
-            if (name == null) return NotFound();
-            StringComparison comparison = StringComparison.OrdinalIgnoreCase;
-            var users = db.Users.ToList().FindAll((u) => u.Name.IndexOf(name, comparison) == 0);
+            var users = GetUsersByNameOrContain(name, UsersSearchParam.ByName);
             if (users.Count == 0) return NotFound();
             return Ok(users);
         }
@@ -53,9 +52,7 @@ namespace TurretWebService.Controllers
         [Route("api/Users/getifcontain/{substring?}")]
         public IHttpActionResult GetIfContain(string substring)
         {
-            if (substring == null) return NotFound();
-            StringComparison comparison = StringComparison.OrdinalIgnoreCase;
-            var users = db.Users.ToList().FindAll((u) => u.Name.IndexOf(substring, comparison) >= 0);
+            var users = GetUsersByNameOrContain(substring, UsersSearchParam.IfContain);
             if (users.Count == 0) return NotFound();
             return Ok(users);
         }
@@ -138,6 +135,17 @@ namespace TurretWebService.Controllers
         private bool UserExists(int id)
         {
             return db.Users.Count(e => e.Id == id) > 0;
+        }
+
+        private List<User> GetUsersByNameOrContain(string nameOrContain, UsersSearchParam searchParam)
+        {
+            StringComparison comparison = StringComparison.OrdinalIgnoreCase;
+            switch (searchParam)
+            {
+                case UsersSearchParam.ByName: return db.Users.ToList().FindAll((u) => u.Name.IndexOf(nameOrContain, comparison) == 0);
+                case UsersSearchParam.IfContain: return db.Users.ToList().FindAll((u) => u.Name.IndexOf(nameOrContain, comparison) >= 0);
+                default: return null;
+            }
         }
     }
 }
