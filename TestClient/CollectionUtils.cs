@@ -23,7 +23,7 @@ namespace TestClient
         }
     }
 
-    public class T
+    class T
     {
     }
 }

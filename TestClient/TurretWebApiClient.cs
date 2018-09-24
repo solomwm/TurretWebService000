@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using TurretWebService.Models;
+using TurretWebService.Params;
 using Newtonsoft.Json;
 
 namespace TestClient
@@ -30,6 +31,36 @@ namespace TestClient
             try
             {
                 HttpResponseMessage response = await GetAsync(path);
+                if (response.IsSuccessStatusCode)
+                {
+                    users = await response.Content.ReadAsAsync<IEnumerable<User>>();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return users;
+        }
+
+        public async Task<IEnumerable<User>> GetUsersByNameOrContain(string nameOrContain, UsersSearchParam searchParam)
+        {
+            IEnumerable<User> users = null;
+            string requestUri = String.Empty;
+
+            switch (searchParam)
+            {
+                case UsersSearchParam.ByName: requestUri = path + "getbyname/" + nameOrContain;
+                    break;
+                case UsersSearchParam.IfContain: requestUri = path + "getifcontain/" + nameOrContain;
+                    break;
+                default: requestUri = path;
+                    break;
+            }
+
+            try
+            {
+                HttpResponseMessage response = await GetAsync(requestUri);
                 if (response.IsSuccessStatusCode)
                 {
                     users = await response.Content.ReadAsAsync<IEnumerable<User>>();

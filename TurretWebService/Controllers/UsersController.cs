@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using TurretWebService.Data;
 using TurretWebService.Models;
+using TurretWebService.Params;
 
 namespace TurretWebService.Controllers
 {
@@ -34,6 +35,26 @@ namespace TurretWebService.Controllers
             }
 
             return Ok(user);
+        }
+
+        // GET: api/Users/getbyname/{name}
+        [HttpGet()]
+        [Route("api/Users/getbyname/{name?}")]
+        public IHttpActionResult GetUsersByName(string name)
+        {
+            var users = GetUsersByNameOrContain(name, UsersSearchParam.ByName);
+            if (users.Count == 0) return NotFound();
+            return Ok(users);
+        }
+
+        // GET: api/Users/getifcontain/{substring}
+        [HttpGet()]
+        [Route("api/Users/getifcontain/{substring?}")]
+        public IHttpActionResult GetIfContain(string substring)
+        {
+            var users = GetUsersByNameOrContain(substring, UsersSearchParam.IfContain);
+            if (users.Count == 0) return NotFound();
+            return Ok(users);
         }
 
         // PUT: api/Users/5
@@ -114,6 +135,17 @@ namespace TurretWebService.Controllers
         private bool UserExists(int id)
         {
             return db.Users.Count(e => e.Id == id) > 0;
+        }
+
+        private List<User> GetUsersByNameOrContain(string nameOrContain, UsersSearchParam searchParam)
+        {
+            StringComparison comparison = StringComparison.OrdinalIgnoreCase;
+            switch (searchParam)
+            {
+                case UsersSearchParam.ByName: return db.Users.ToList().FindAll((u) => u.Name.IndexOf(nameOrContain, comparison) == 0);
+                case UsersSearchParam.IfContain: return db.Users.ToList().FindAll((u) => u.Name.IndexOf(nameOrContain, comparison) >= 0);
+                default: return null;
+            }
         }
     }
 }
