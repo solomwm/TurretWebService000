@@ -15,9 +15,9 @@ namespace TurretWebService.Data
 
             var userList = new List<User>()
             {
-                new User {Name = "Винни-Пух", MaxLevel = 0, MaxScore = 0},
-                new User {Name = "Пятачок", MaxLevel = 0, MaxScore = 0},
-                new User {Name = "Кролик", MaxLevel = 0, MaxScore = 0},
+                new User {Name = "Винни-Пух", Password = "123456", MaxLevel = 0, MaxScore = 0},
+                new User {Name = "Пятачок", Password = "123456", MaxLevel = 0, MaxScore = 0},
+                new User {Name = "Кролик", Password = "123456", MaxLevel = 0, MaxScore = 0},
             };
 
             userList.ForEach(u => context.Users.Add(u));

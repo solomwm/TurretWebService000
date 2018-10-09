@@ -10,6 +10,7 @@ namespace TurretWebService
         public static void Register(HttpConfiguration config)
         {
             // Конфигурация и службы веб-API
+            //config.Services.Add()
 
             // Маршруты веб-API
             config.MapHttpAttributeRoutes();

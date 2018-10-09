@@ -23,6 +23,7 @@ namespace TestClient
             path = BaseAddress + usersPath;
             DefaultRequestHeaders.Accept.Clear();
             DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //this.DefaultRequestHeaders.UserAgent;
         }
 
         public async Task<IEnumerable<User>> GetUsersAsync()

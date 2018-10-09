@@ -14,6 +14,7 @@ using TurretWebService.Params;
 
 namespace TurretWebService.Controllers
 {
+    //[Authorize]
     public class UsersController : ApiController
     {
         private TurretDBContext db = new TurretDBContext();
